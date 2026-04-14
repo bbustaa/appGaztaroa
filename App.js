@@ -1,25 +1,19 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StatusBar } from 'expo-status-bar'; 
+import React from 'react'; 
+import { View } from 'react-native'; 
+import { SafeAreaProvider } from 'react-native-safe-area-context'; 
+import { Provider as PaperProvider } from 'react-native-paper'; 
+import Campobase from './componentes/CampobaseComponent';
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.texto}>oh oh valentina</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#bde0fe',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  texto: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#1d3557',
-  },
-});
+export default function App() { 
+return ( 
+<SafeAreaProvider> 
+<PaperProvider> 
+<View style={{ flex: 1 }}> 
+<Campobase /> 
+<StatusBar style="auto" /> 
+</View> 
+</PaperProvider> 
+</SafeAreaProvider> 
+); 
+} 
