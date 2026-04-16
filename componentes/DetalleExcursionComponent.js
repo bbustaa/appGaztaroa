@@ -1,6 +1,6 @@
 import { Component } from 'react';
-import { View, StyleSheet } from 'react-native';
-import { Card, Text } from 'react-native-paper';
+import { View, StyleSheet, ImageBackground, Text } from 'react-native';
+import { Card } from 'react-native-paper';
 import { EXCURSIONES } from '../comun/excursiones';
 
 function RenderExcursion(props) {
@@ -9,15 +9,16 @@ function RenderExcursion(props) {
   if (excursion != null) {
     return (
       <Card style={styles.card}>
-        <Card.Title
-          title={excursion.nombre}
-          titleStyle={styles.titulo}
-          style={styles.cardTitle}
-        />
-        <Card.Cover
+        <ImageBackground
           source={require('./imagenes/40Años.png')}
           style={styles.image}
-        />
+          resizeMode="cover"
+        >
+          <Text style={styles.tituloSobreImagen}>
+            {excursion.nombre}
+          </Text>
+        </ImageBackground>
+
         <Card.Content>
           <Text style={styles.descripcion}>
             {excursion.descripcion}
@@ -40,7 +41,6 @@ class DetalleExcursion extends Component {
 
   render() {
     const { excursionId } = this.props.route.params;
-
     return <RenderExcursion excursion={this.state.excursiones[+excursionId]} />;
   }
 }
@@ -50,17 +50,20 @@ const styles = StyleSheet.create({
     margin: 8,
   },
   image: {
-    marginHorizontal: 0,
+    height: 200,
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+  },
+  tituloSobreImagen: {
+    color: 'chocolate',
+    fontSize: 30,
+    fontWeight: 'bold',
+    marginTop: 10,
+    textAlign: 'center',
   },
   descripcion: {
     marginTop: 20,
     marginBottom: 20,
-  },
-  titulo: {
-    textAlign: 'center',
-  },
-  cardTitle: {
-    alignItems: 'center',
   },
 });
 
