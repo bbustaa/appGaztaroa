@@ -1,9 +1,9 @@
 import { Component } from 'react';
-import { View, StyleSheet, ImageBackground, Text, ScrollView } from 'react-native';
-import { Card, IconButton, Divider } from 'react-native-paper';
-import { baseUrl } from '../comun/comun';
+import { View, StyleSheet, ImageBackground, Text, ScrollView, Modal } from 'react-native';
+import { Card, IconButton, Divider, TextInput, Button } from 'react-native-paper';
+import { baseUrl, colorGaztaroaOscuro } from '../comun/comun';
 import { connect } from 'react-redux';
-import { postFavorito } from '../redux/ActionCreators';
+import { postFavorito, postComentario } from '../redux/ActionCreators';
 
 const mapStateToProps = (state) => ({
   excursiones: state.excursiones,
@@ -13,7 +13,11 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   postFavorito: (excursionId) => dispatch(postFavorito(excursionId)),
+  postComentario: (excursionId, valoracion, autor, comentario) =>
+    dispatch(postComentario(excursionId, valoracion, autor, comentario)),
 });
+
+const etiquetaValoracion = ['', 'Pésimo', 'Malo', 'Normal', 'Bueno', 'Excelente'];
 
 function RenderExcursion(props) {
   const excursion = props.excursion;
@@ -47,6 +51,11 @@ function RenderExcursion(props) {
                 : props.onPress()
             }
           />
+          <IconButton
+            icon="pencil"
+            size={28}
+            onPress={() => props.onPressLapiz()}
+          />
         </View>
       </Card>
     );
@@ -58,11 +67,9 @@ function RenderExcursion(props) {
 function formatearFecha(fecha) {
   const fechaLimpia = fecha.replace(/\s*:\s*/g, ':');
   const d = new Date(fechaLimpia);
-
   if (isNaN(d.getTime())) {
     return fecha;
   }
-
   return d.toLocaleString();
 }
 
@@ -88,10 +95,42 @@ function RenderComentario(props) {
   );
 }
 
-
 class DetalleExcursion extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      valoracion: 5,
+      autor: '',
+      comentario: '',
+      showModal: false,
+    };
+  }
+
+  toggleModal() {
+    this.setState({ showModal: !this.state.showModal });
+  }
+
+  resetForm() {
+    this.setState({
+      valoracion: 3,
+      autor: '',
+      comentario: '',
+      showModal: false,
+    });
+  }
+
   marcarFavorito(excursionId) {
     this.props.postFavorito(excursionId);
+  }
+
+  gestionarComentario(excursionId) {
+    this.props.postComentario(
+      excursionId,
+      this.state.valoracion,
+      this.state.autor,
+      this.state.comentario
+    );
+    this.resetForm();
   }
 
   render() {
@@ -103,7 +142,72 @@ class DetalleExcursion extends Component {
           excursion={this.props.excursiones.excursiones[+excursionId]}
           favorita={this.props.favoritos.favoritos.some((el) => el === excursionId)}
           onPress={() => this.marcarFavorito(excursionId)}
+          onPressLapiz={() => this.toggleModal()}
         />
+
+        <Modal
+          visible={this.state.showModal}
+          animationType="slide"
+          onRequestClose={() => this.toggleModal()}
+        >
+          <View style={styles.modal}>
+            <Text style={styles.modalTitulo}>Añadir comentario</Text>
+
+            <View style={styles.estrellas}>
+              {[1, 2, 3, 4, 5].map((estrella) => (
+                <IconButton
+                  key={estrella}
+                  icon={estrella <= this.state.valoracion ? 'star' : 'star-outline'}
+                  size={36}
+                  iconColor={colorGaztaroaOscuro}
+                  onPress={() => this.setState({ valoracion: estrella })}
+                />
+              ))}
+            </View>
+            <Text style={styles.etiquetaValoracion}>
+              {etiquetaValoracion[this.state.valoracion]}
+            </Text>
+
+            <View style={styles.inputRow}>
+              <IconButton icon="account" size={24} />
+              <TextInput
+                style={styles.textInput}
+                label="Autor"
+                mode="outlined"
+                value={this.state.autor}
+                onChangeText={(texto) => this.setState({ autor: texto })}
+              />
+            </View>
+
+            <View style={styles.inputRow}>
+              <IconButton icon="comment-text" size={24} />
+              <TextInput
+                style={styles.textInput}
+                label="Comentario"
+                mode="outlined"
+                value={this.state.comentario}
+                onChangeText={(texto) => this.setState({ comentario: texto })}
+              />
+            </View>
+
+            <View style={styles.botonesModal}>
+              <Button
+                icon="close"
+                mode="outlined"
+                onPress={() => this.resetForm()}
+              >
+                Cancelar
+              </Button>
+              <Button
+                icon="send"
+                mode="contained"
+                onPress={() => this.gestionarComentario(excursionId)}
+              >
+                Enviar
+              </Button>
+            </View>
+          </View>
+        </Modal>
 
         <RenderComentario
           comentarios={this.props.comentarios.comentarios.filter(
@@ -136,7 +240,8 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   iconoContainer: {
-    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
     marginBottom: 8,
   },
   comentarioItem: {
@@ -144,6 +249,43 @@ const styles = StyleSheet.create({
   },
   divider: {
     marginTop: 8,
+  },
+  modal: {
+    flex: 1,
+    padding: 24,
+    justifyContent: 'center',
+    backgroundColor: 'white',
+  },
+  modalTitulo: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 16,
+    color: colorGaztaroaOscuro,
+  },
+  estrellas: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginBottom: 4,
+  },
+  etiquetaValoracion: {
+    textAlign: 'center',
+    fontSize: 16,
+    marginBottom: 16,
+    color: colorGaztaroaOscuro,
+  },
+  inputRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  textInput: {
+    flex: 1,
+  },
+  botonesModal: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginTop: 20,
   },
 });
 
