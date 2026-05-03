@@ -3,6 +3,7 @@ import { ScrollView, View, Image, StyleSheet } from 'react-native';
 import { Card, Text, List, Divider } from 'react-native-paper';
 import { baseUrl } from '../comun/comun';
 import { connect } from 'react-redux';
+import { IndicadorActividad } from './IndicadorActividadComponent';
 
 const mapStateToProps = (state) => ({
   actividades: state.actividades,
@@ -32,27 +33,33 @@ class QuienesSomos extends Component {
         <Card style={styles.card}>
           <Card.Title title="Actividades y recursos" />
           <Card.Content>
-            {this.props.actividades.actividades.map((item) => (
-              <View key={item.id}>
-                <List.Item
-                  title={item.nombre}
-                  description={item.descripcion}
-                  titleNumberOfLines={0}
-                  descriptionNumberOfLines={8}
-                  left={(props) => (
-                    <Image
-                      source={{ uri: baseUrl + item.imagen }}
-                      style={[props.style, styles.imagen]}
-                      resizeMode="cover"
-                    />
-                  )}
-                  titleStyle={styles.titulo}
-                  descriptionStyle={styles.descripcion}
-                  contentStyle={styles.contenido}
-                />
-                <Divider />
-              </View>
-            ))}
+            {this.props.actividades.isLoading ? (
+              <IndicadorActividad />
+            ) : this.props.actividades.errMess ? (
+              <Text>{this.props.actividades.errMess}</Text>
+            ) : (
+              this.props.actividades.actividades.map((item) => (
+                <View key={item.id}>
+                  <List.Item
+                    title={item.nombre}
+                    description={item.descripcion}
+                    titleNumberOfLines={0}
+                    descriptionNumberOfLines={8}
+                    left={(props) => (
+                      <Image
+                        source={{ uri: baseUrl + item.imagen }}
+                        style={[props.style, styles.imagen]}
+                        resizeMode="cover"
+                      />
+                    )}
+                    titleStyle={styles.titulo}
+                    descriptionStyle={styles.descripcion}
+                    contentStyle={styles.contenido}
+                  />
+                  <Divider />
+                </View>
+              ))
+            )}
           </Card.Content>
         </Card>
       </ScrollView>
