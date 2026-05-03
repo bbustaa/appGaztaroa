@@ -2,7 +2,11 @@ import React, { Component } from 'react';
 import { ScrollView, View, Image, StyleSheet } from 'react-native';
 import { Card, Text, List, Divider } from 'react-native-paper';
 import { baseUrl } from '../comun/comun';
-import { ACTIVIDADES } from '../comun/actividades';
+import { connect } from 'react-redux';
+
+const mapStateToProps = (state) => ({
+  actividades: state.actividades,
+});
 
 function Historia() {
   return (
@@ -20,13 +24,6 @@ function Historia() {
 }
 
 class QuienesSomos extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      actividades: ACTIVIDADES,
-    };
-  }
-
   render() {
     return (
       <ScrollView>
@@ -35,7 +32,7 @@ class QuienesSomos extends Component {
         <Card style={styles.card}>
           <Card.Title title="Actividades y recursos" />
           <Card.Content>
-            {this.state.actividades.map((item) => (
+            {this.props.actividades.actividades.map((item) => (
               <View key={item.id}>
                 <List.Item
                   title={item.nombre}
@@ -87,4 +84,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default QuienesSomos;
+export default connect(mapStateToProps)(QuienesSomos);
