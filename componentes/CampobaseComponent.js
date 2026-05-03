@@ -15,6 +15,7 @@ import {
   DrawerItemList
 } from '@react-navigation/drawer';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { colorGaztaroaOscuro, colorGaztaroaClaro } from '../comun/comun';
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -25,7 +26,7 @@ function BotonMenu(props) {
       <MaterialCommunityIcons
         name="menu"
         size={40}
-        color={Platform.OS === 'ios' ? '#015afc' : 'white'}
+        color={Platform.OS === 'ios' ? colorGaztaroaOscuro : 'white'}
       />
     </Pressable>
   );
@@ -75,7 +76,7 @@ class Campobase extends Component {
         initialRouteName="Home" 
         screenOptions={{ 
           headerTintColor: '#fff', 
-          headerStyle: { backgroundColor: '#015afc' }, 
+          headerStyle: { backgroundColor: colorGaztaroaOscuro }, 
           headerTitleStyle: { color: '#fff' }, 
         }} 
       > 
@@ -96,7 +97,7 @@ class Campobase extends Component {
         initialRouteName="Calendario" 
         screenOptions={{ 
           headerTintColor: '#fff', 
-          headerStyle: { backgroundColor: '#015afc' }, 
+          headerStyle: { backgroundColor: colorGaztaroaOscuro }, 
           headerTitleStyle: { color: '#fff' }, 
         }} 
       > 
@@ -140,7 +141,7 @@ class Campobase extends Component {
         screenOptions={{
           headerShown: false,
           drawerStyle: {
-            backgroundColor: '#c2d3da',
+            backgroundColor: colorGaztaroaClaro,
           },
         }}
       > 
@@ -190,7 +191,7 @@ class Campobase extends Component {
       initialRouteName="QuienesSomos"
       screenOptions={{
         headerTintColor: '#fff',
-        headerStyle: { backgroundColor: '#015afc' },
+        headerStyle: { backgroundColor: colorGaztaroaOscuro },
         headerTitleStyle: { color: '#fff' },
       }}
     >
@@ -211,7 +212,7 @@ ContactoNavegador = () => {
       initialRouteName="Contacto"
       screenOptions={{
         headerTintColor: '#fff',
-        headerStyle: { backgroundColor: '#015afc' },
+        headerStyle: { backgroundColor: colorGaztaroaOscuro },
         headerTitleStyle: { color: '#fff' },
       }}
     >
@@ -242,7 +243,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   drawerHeader: {
-    backgroundColor: '#015afc',
+    backgroundColor: colorGaztaroaOscuro,
     height: 100,
     flexDirection: 'row',
     alignItems: 'center',

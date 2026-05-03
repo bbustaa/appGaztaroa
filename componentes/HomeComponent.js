@@ -1,6 +1,7 @@
 import { Component } from 'react';
 import { ScrollView, View, StyleSheet, ImageBackground, Text } from 'react-native';
 import { Card } from 'react-native-paper';
+import { baseUrl } from '../comun/comun';
 import { EXCURSIONES } from '../comun/excursiones';
 import { CABECERAS } from '../comun/cabeceras';
 import { ACTIVIDADES } from '../comun/actividades';
@@ -13,7 +14,7 @@ function RenderItem({ item }) {
   return (
     <Card style={styles.card}>
       <ImageBackground
-        source={require('./imagenes/40Años.png')}
+        source={{ uri: baseUrl + item.imagen }}
         style={styles.image}
         resizeMode="cover"
       >
@@ -62,7 +63,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   tituloSobreImagen: {
-    color: 'chocolate',
+    color: 'white',
     fontSize: 30,
     fontWeight: 'bold',
     marginTop: 10,
